@@ -1,0 +1,101 @@
+CREATE or replace FUNCTION ADD_TO_CART(PID INTEGER,BID VARCHAR,PRICE1 INTEGER,sid integer)
+RETURNS VOID AS
+$BODY$
+BEGIN
+insert into cart(quantity,price,bid_id,pid_id,sid_id) values(1,price1,bid,pid,sid);
+END;
+$BODY$
+LANGUAGE 'plpgsql' VOLATILE
+COST 100;
+
+
+select p.id,c.quantity,c.price,p.title from product p,cart c where 	c.bid_id='kvivek1339@gmail.com' and c.pid_id=p.id;
+
+CREATE FUNCTION get_cart(bid varchar) RETURNS RECORD AS
+DECLARE 
+c RECORD; 
+BEGIN
+select into c p.id,c.quantity,c.price,p.title from product p,cart c where  c.bid_id=bid and c.pid_id=p.id;
+return c
+END;
+LANGUAGE 'plpgsql' VOLATILE
+COST 100;
+
+
+
+
+
+
+
+
+
+CREATE FUNCTION show_cart1(bid varchar ) RETURNS setof record AS 
+
+$$ SELECT p.id,c.quantity,c.price,p.title,p.image from product p,cart c where  c.bid_id=bid and c.pid_id=p.id; $$
+
+ LANGUAGE 'sql';
+
+
+"select p.id,c.quantity,c.price,p.title from product p,cart c where  c.bid_id='"+user_email+"' and c.pid_id=p.id;")
+
+create or replace Function insert_into_cart(price1 integer,bid varchar,pid integer,sid integer)
+
+returns void as
+BEGIN
+ insert into cart(quantity,price,bid_id,pid_id,sid_id) values(1,price1,bid,pid,sid);
+END;
+language 'plpgsql';
+
+
+
+CREATE FUNCTION ADD_TO_CART1(PID INTEGER,BID VARCHAR,PRICE1 INTEGER,SID VARCHAR)
+ AS
+BEGIN
+     UPDATE cart 
+     SET quantity=quantity+1 
+     WHERE pid_id = pid AND
+     bid_id=bid;
+     UPDATE cart 
+     SET price=quantity+1 
+     WHERE pid_id = pid AND
+     bid_id=bid;
+    END
+LANGUAGE 'sql' VOLATILE
+COST 100;
+
+CREATE PROCEDURE updtdemployee
+       @employeeID INT
+  AS
+    BEGIN
+     UPDATE cart 
+     SET quantity=quantity+1 
+     WHERE Emp_Code = @employeeID
+    END
+
+
+CREATE FUNCTION remove_from_cart(PID INTEGER,BID VARCHAR)
+RETURNS VOID AS
+$BODY$
+BEGIN
+     delete from cart  
+     where pid_id=PID and
+     bid_id=bid;
+END;
+$BODY$
+LANGUAGE 'plpgsql' VOLATILE
+COST 100;
+
+
+
+
+CREATE OR REPLACE FUNCTION peek_orders(bid varchar ) RETURNS setof record AS 
+
+$$ SELECT p.id,p.title,p.image,o.quantity,o.price
+from product p,order1 o
+where o.bid_id=bid and
+o.pid_id=p.id
+
+
+ $$
+
+ LANGUAGE 'sql';

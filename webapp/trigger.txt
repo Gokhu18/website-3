@@ -1,0 +1,23 @@
+DELIMITER $$
+CREATE TRIGGER tgr_1 AFTER INSERT ON order1
+FOR EACH ROW
+BEGIN
+  DELETE FROM cart where bid_id = NEW.bid_id AND pid_id=NEW.pid_id;
+END $$
+
+create or replace function empty_cart()
+returns trigger as
+$BODY$
+BEGIN
+	delete from cart where bid_id=NEW.bid_id AND pid_id=NEW.pid_id;
+
+	RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql'
+
+create trigger on_order_placed
+AFTER INSERT
+ON order1
+FOR EACH ROW
+EXECUTE PROCEDURE empty_cart();
